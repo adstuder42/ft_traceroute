@@ -6,7 +6,7 @@
 /*   By: adstuder <adstuder@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/17 15:19:17 by adstuder          #+#    #+#             */
-/*   Updated: 2021/06/23 12:56:54 by adstuder         ###   ########.fr       */
+/*   Updated: 2021/06/24 16:16:41 by adstuder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,9 @@ void get_flags(int argc, char **argv)
       j++;
       while (argv[i][j] != '\0')
       {
-        if (argv[i][j] == 'h')
+        if (argv[i][j] == 'v')
+          params.flag_v = 1;
+        else if (argv[i][j] == 'h')
           params.flag_h = 1;
         else
           usage();
@@ -49,20 +51,18 @@ void get_flags(int argc, char **argv)
   if (params.flag_h == 1)
     usage();
   if (params.address == NULL)
-    print_error("usage error: destination adress required");
+    print_error("ping: usage error: destination adress required");
 }
 
-float ft_ping(int argc, char **argv)
+int ft_ping(int argc, char **argv)
 {
   init_params();
   get_flags(argc, argv);
   get_target(params.address);
   gettimeofday(&params.start, NULL);
   set_params();
-  send_ping();
   return (0);
 }
-
 
 int main(int argc, char **argv)
 {
@@ -71,11 +71,17 @@ int main(int argc, char **argv)
     fprintf(stderr, "ping: usage error: destination adress required\n");
     exit(EXIT_FAILURE);
   }
-  init_params();
-  get_flags(argc, argv);
-  get_target(params.address);
-  gettimeofday(&params.start, NULL);
-  set_params();
-  send_ping();
+  params.ttl = 1;
+  int i = 3;
+ // int ret = -1;
+  //while (ret != 1)
+  while (i > 0)
+  {
+    params.ttl++;
+    params.time = 0.0;
+  ft_ping(argc, argv);
+  printf("%.*f\n",3,params.time);
+  i--;
+  } 
   return (0);
 }

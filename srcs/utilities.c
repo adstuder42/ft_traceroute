@@ -6,7 +6,7 @@
 /*   By: adstuder <adstuder@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/17 15:12:47 by adstuder          #+#    #+#             */
-/*   Updated: 2021/06/23 12:55:59 by adstuder         ###   ########.fr       */
+/*   Updated: 2021/03/04 11:10:38 by adstuder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,38 +41,89 @@ char *ft_gai_strerror(int status)
 {
 
   if (status == -1)
+    if (params.flag_v == 1)
+      return ("EAI_BADFLAGS : Bad value for ai_flags");
+    else
       return ("Bad value for ai_flags");
   else if (status == -2)
+    if (params.flag_v == 1)
+      return ("EAI_NONAME : Name or service not known");
+    else
       return ("Name or service not known");
   else if (status == -3)
+    if (params.flag_v == 1)
+      return ("EAI_AGAIN : Temporary failure in name resolution");
+    else
       return ("Temporary failure in name resolution");
   else if (status == -4)
+    if (params.flag_v == 1)
+      return ("EAI_FAIL : Non-recoverable failure in name resolution");
+    else
       return ("Non-recoverable failure in name resolution");
   else if (status == -5)
+    if (params.flag_v == 1)
+      return ("EAI_NODATA : No address associated with hostname");
+    else
       return ("No address associated with hostname");
   else if (status == -6)
+    if (params.flag_v == 1)
+      return ("EAI_FAMILY : ai_family not supported");
+    else
       return ("ai_family not supported");
   else if (status == -7)
+    if (params.flag_v == 1)
+      return ("EAI_SOCKTYPE : ai_socktype not supported");
+    else
       return ("ai_socktype not supported");
   else if (status == -8)
+    if (params.flag_v == 1)
+      return ("EAI_SERVICE : Servname not supported for ai_socktype");
+    else
       return ("Servname not supported for ai_socktype");
   else if (status == -9)
+    if (params.flag_v == 1)
+      return ("EAI_ADDRFAMILY : Address family for hostname not supported");
+    else
       return ("Address family for hostname not supported");
   else if (status == -10)
+    if (params.flag_v == 1)
+      return ("EAI_MEMORY : Memory allocation failure");
+    else
       return ("Memory allocation failure");
   else if (status == -11)
+    if (params.flag_v == 1)
+      return ("EAI_SYSTEM : System error");
+    else
       return ("System error");
   else if (status == -100)
+    if (params.flag_v == 1)
+      return ("EAI_INPROGRESS : Processing request in progress");
+    else
       return ("Processing request in progress");
   else if (status == -101)
+    if (params.flag_v == 1)
+      return ("EAI_CANCELED : Request canceled");
+    else
       return ("Request canceled");
   else if (status == -102)
+    if (params.flag_v == 1)
+      return ("EAI_NOTCANCELED : Request not canceled");
+    else
       return ("Request not canceled");
   else if (status == -103)
+    if (params.flag_v == 1)
+      return ("EAI_ALLDONE : All requests done");
+    else
       return ("All requests done");
   else if (status == -104)
+    if (params.flag_v == 1)
+      return ("EAI_INTR : Interrupted by a signal");
+    else
       return ("Interrupted by a signal");
   else if (status == -105)
+    if (params.flag_v == 1)
+      return ("EAI_IDN_ENCODE : Parameter string not correctly encoded");
+    else
       return ("Parameter string not correctly encoded");
   else
     return ("Unknown error");

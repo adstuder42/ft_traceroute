@@ -6,7 +6,7 @@
 /*   By: adstuder <adstuder@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/22 16:00:39 by adstuder          #+#    #+#             */
-/*   Updated: 2021/06/23 13:18:14 by adstuder         ###   ########.fr       */
+/*   Updated: 2021/06/24 15:43:17 by adstuder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,28 +33,32 @@ typedef int SOCKET;
 typedef void (*sighandler_t)(int);
 
 #define PACKET_SIZE 64
+#define TTL_VALUE 2 /* max = 255 */
 
 typedef struct s_packet
 {
-    struct icmphdr hdr;
-    char msg[PACKET_SIZE - sizeof(struct icmphdr)];
+  struct icmphdr hdr;
+  char msg[PACKET_SIZE - sizeof(struct icmphdr)];
 } t_packet;
 
 typedef struct s_params
 {
-    int ttl;
-    int flag_h;
-    char *address;
-    char *ipv4;
-    char *rdns;
-    bool isAdressIpv4;
-    SOCKET sock;
-    struct sockaddr_in *target;
-    t_packet packet;
-    struct msghdr msg;
-    struct timeval start;
-    struct timeval end;
-    int error_cnt;
+  int ttl;
+  float time;
+  int flag_v;
+  int flag_h;
+  char *address; //google.fr
+  char *ipv4;
+  char *rdns;
+  bool isAdressIpv4;
+  SOCKET sock;
+  struct sockaddr_in *target;
+  t_packet packet;
+  struct msghdr msg;
+  int received;
+  struct timeval start;
+  struct timeval end;
+  int error_cnt;
 
 } t_params;
 

@@ -6,7 +6,7 @@
 /*   By: adstuder <adstuder@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/17 15:21:35 by adstuder          #+#    #+#             */
-/*   Updated: 2021/06/23 13:17:33 by adstuder         ###   ########.fr       */
+/*   Updated: 2021/06/24 16:17:01 by adstuder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 void init_params()
 {
-  params.ttl = 1;
+  params.time = 0.0;
+  params.flag_v = 0;
   params.flag_h = 0;
   params.address = NULL;
   params.ipv4 = NULL;
@@ -24,6 +25,7 @@ void init_params()
   params.target = NULL;
   ft_bzero(&params.packet, sizeof(params.packet));
   ft_bzero(&params.msg, sizeof(params.msg));
+  params.received = 0;
   ft_bzero(&params.start, sizeof(params.start));
   ft_bzero(&params.end, sizeof(params.end));
   params.error_cnt = 0;
@@ -83,4 +85,6 @@ void set_params()
   params.sock = sock;
   params.packet = packet;
   params.rdns = reverse_dns_lookup();
+  send_ping();
+  
 }
