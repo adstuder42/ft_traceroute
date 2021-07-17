@@ -6,7 +6,7 @@
 /*   By: adstuder <adstuder@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/17 15:21:35 by adstuder          #+#    #+#             */
-/*   Updated: 2021/06/24 16:17:01 by adstuder         ###   ########.fr       */
+/*   Updated: 2021/07/04 12:47:42 by adstuder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void init_params()
   params.address = NULL;
   params.ipv4 = NULL;
   params.rdns = NULL;
+  params.reply_ip = NULL;
   params.isAdressIpv4 = false;
   params.sock = 0;
   params.target = NULL;

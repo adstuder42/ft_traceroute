@@ -6,7 +6,7 @@
 /*   By: adstuder <adstuder@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/17 15:19:17 by adstuder          #+#    #+#             */
-/*   Updated: 2021/06/24 16:16:41 by adstuder         ###   ########.fr       */
+/*   Updated: 2021/07/10 15:17:15 by adstuder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,13 +54,17 @@ void get_flags(int argc, char **argv)
     print_error("ping: usage error: destination adress required");
 }
 
-int ft_ping(int argc, char **argv)
+int ft_ping()
 {
-  init_params();
-  get_flags(argc, argv);
-  get_target(params.address);
+
   gettimeofday(&params.start, NULL);
   set_params();
+  return (0);
+}
+
+int print_time()
+{
+  printf(" %.*f ms", 3, params.time);
   return (0);
 }
 
@@ -68,20 +72,50 @@ int main(int argc, char **argv)
 {
   if (argc < 2)
   {
-    fprintf(stderr, "ping: usage error: destination adress required\n");
+    fprintf(stderr, "traceroute : usage error: destination adress required\n");
     exit(EXIT_FAILURE);
   }
-  params.ttl = 1;
   int i = 3;
- // int ret = -1;
+  bool first_line = true; // int ret = -1;
+  char *prev_ip = NULL;
   //while (ret != 1)
-  while (i > 0)
+  init_params();
+  get_flags(argc, argv);
+  get_target(params.address);
+  params.ttl = 1;
+  while (params.ttl <= 30)
   {
+    while (i > 0)
+    {
+      params.time = 0.0;
+      ft_ping();
+      prev_ip = ft_strdup(params.reply_ip);
+      if (first_line == true)
+      {
+        // vérifier 60 bytes packets
+        printf("traceroute to %s (%s), 30 hops max, 60 byte packets\n", params.address, params.ipv4);
+        printf(" %d  _gateway (%s) ", params.ttl, params.reply_ip);
+        first_line = false;
+      }
+      if (ft_strcmp(prev_ip, params.reply_ip) != 0)
+        printf(" (%s) ", params.reply_ip);
+      if (params.reply_ip != NULL)
+      {
+        free(params.reply_ip);
+        params.reply_ip = NULL;
+      }
+      print_time();
+
+      //    printf("%.*f\n", 3, params.time);
+
+      if (prev_ip != NULL)
+      {
+        free(prev_ip);
+        prev_ip = NULL;
+      }
+      i--;
+    }
     params.ttl++;
-    params.time = 0.0;
-  ft_ping(argc, argv);
-  printf("%.*f\n",3,params.time);
-  i--;
-  } 
+  }
   return (0);
 }

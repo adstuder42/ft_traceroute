@@ -6,7 +6,7 @@
 /*   By: adstuder <adstuder@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/22 16:00:39 by adstuder          #+#    #+#             */
-/*   Updated: 2021/06/24 15:43:17 by adstuder         ###   ########.fr       */
+/*   Updated: 2021/07/04 12:47:35 by adstuder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_params
   char *address; //google.fr
   char *ipv4;
   char *rdns;
+  char *reply_ip;
   bool isAdressIpv4;
   SOCKET sock;
   struct sockaddr_in *target;

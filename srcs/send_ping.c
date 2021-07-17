@@ -6,7 +6,7 @@
 /*   By: adstuder <adstuder@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/17 15:16:45 by adstuder          #+#    #+#             */
-/*   Updated: 2021/06/24 16:16:44 by adstuder         ###   ########.fr       */
+/*   Updated: 2021/07/10 15:26:56 by adstuder         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int send_ping()
   struct timeval request;
   struct timeval reply;
 
-  timeout.tv_sec = 4;
+  timeout.tv_sec = 5;
   timeout.tv_usec = 0;
   request.tv_sec = 0;
   request.tv_usec = 0;
@@ -78,7 +78,7 @@ int send_ping()
   struct iphdr *ip;
   struct icmphdr *icmp;
   char *p_saddr;
-  int ret_recvmsg;
+ 
 
   if (setsockopt(params.sock, IPPROTO_IP, IP_TTL, &params.ttl, sizeof(params.ttl)) < 0)
     print_error("setsockopt setting IP_TTL failed");
@@ -87,12 +87,8 @@ int send_ping()
   if (setsockopt(params.sock, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
     print_error("setsockopt failed");
 
-  params.packet.hdr.un.echo.sequence++;
-  params.packet.hdr.checksum = 0;
-  params.packet.hdr.checksum = checksum(&(params.packet), sizeof(params.packet));
-
   gettimeofday(&request, NULL);
-  
+
   if (sendto(params.sock, &(params.packet), sizeof(params.packet), 0, (struct sockaddr *)params.target, sizeof(*params.target)) <= 0)
   {
     printf("ping: sendto: network unavailable\n");
@@ -107,36 +103,96 @@ int send_ping()
   icmp->type = -1;
   icmp->code = -1;
 
-    if ((ret_recvmsg = recvmsg(params.sock, &params.msg, 0)) <= 0)
-    {
-      if (icmp->type == 8)
-        recvmsg(params.sock, &params.msg, 0);
+  recvmsg(params.sock, &params.msg, 0);
+ 
+  
+    p_saddr = ntop(ip->saddr);
+    params.reply_ip = p_saddr;
+    // free(p_saddr);               // attention au free
 
-      gettimeofday(&reply, NULL);
-      long int sec = (reply.tv_sec - request.tv_sec) * 1000000;
-      long int usec = reply.tv_usec - request.tv_usec;
-      params.time = ((float)sec + (float)usec) / 1000;
+    gettimeofday(&reply, NULL);
+    long int sec = (reply.tv_sec - request.tv_sec) * 1000000;
+    long int usec = reply.tv_usec - request.tv_usec;
+    params.time = ((float)sec + (float)usec) / 1000;
 
-      return (-1);
-    }
-    if (icmp->type == 11)
-    {
-      p_saddr = ntop(ip->saddr);
-      printf("%s\n", p_saddr);
-      free(p_saddr);
-
-      gettimeofday(&reply, NULL);
-      long int sec = (reply.tv_sec - request.tv_sec) * 1000000;
-      long int usec = reply.tv_usec - request.tv_usec;
-      params.time = ((float)sec + (float)usec) / 1000;
-
-      return (0);
-    }
-  gettimeofday(&reply, NULL);
-
-  long int sec = (reply.tv_sec - request.tv_sec) * 1000000;
-  long int usec = reply.tv_usec - request.tv_usec;
-
-  params.time = ((float)sec + (float)usec) / 1000;
+  
   return (1);
 }
+
+// int send_ping()
+// {
+//   struct timeval timeout;
+//   struct timeval request;
+//   struct timeval reply;
+
+//   timeout.tv_sec = 5;
+//   timeout.tv_usec = 0;
+//   request.tv_sec = 0;
+//   request.tv_usec = 0;
+//   reply.tv_sec = 0;
+//   reply.tv_usec = 0;
+//   struct iphdr *ip;
+//   struct icmphdr *icmp;
+//   char *p_saddr;
+//   int ret_recvmsg;
+
+//   if (setsockopt(params.sock, IPPROTO_IP, IP_TTL, &params.ttl, sizeof(params.ttl)) < 0)
+//     print_error("setsockopt setting IP_TTL failed");
+//   if (setsockopt(params.sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
+//     print_error("setsockopt setting SO_RCVTIMEO failed");
+//   if (setsockopt(params.sock, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0)
+//     print_error("setsockopt failed");
+
+//   params.packet.hdr.un.echo.sequence++;
+//   params.packet.hdr.checksum = 0;
+//   params.packet.hdr.checksum = checksum(&(params.packet), sizeof(params.packet));
+
+//   gettimeofday(&request, NULL);
+
+//   if (sendto(params.sock, &(params.packet), sizeof(params.packet), 0, (struct sockaddr *)params.target, sizeof(*params.target)) <= 0)
+//   {
+//     printf("ping: sendto: network unavailable\n");
+//     return (-1);
+//   }
+
+//   ip = (struct iphdr *)params.msg.msg_iov[0].iov_base;
+//   icmp = (struct icmphdr *)(params.msg.msg_iov[0].iov_base + sizeof(struct iphdr));
+
+//   ft_bzero(ip, sizeof(struct iphdr));
+//   ft_bzero(icmp, sizeof(struct icmphdr));
+//   icmp->type = -1;
+//   icmp->code = -1;
+
+//     if ((ret_recvmsg = recvmsg(params.sock, &params.msg, 0)) <= 0)
+//     {
+//       if (icmp->type == 8)
+//         recvmsg(params.sock, &params.msg, 0);
+
+//       gettimeofday(&reply, NULL);
+//       long int sec = (reply.tv_sec - request.tv_sec) * 1000000;
+//       long int usec = reply.tv_usec - request.tv_usec;
+//       params.time = ((float)sec + (float)usec) / 1000;
+
+//       return (-1);
+//     }
+//     if (icmp->type == 11)
+//     {
+//       p_saddr = ntop(ip->saddr);
+//      params.reply_ip = p_saddr;
+//      // free(p_saddr);               // attention au free
+
+//       gettimeofday(&reply, NULL);
+//       long int sec = (reply.tv_sec - request.tv_sec) * 1000000;
+//       long int usec = reply.tv_usec - request.tv_usec;
+//       params.time = ((float)sec + (float)usec) / 1000;
+
+//       return (0);
+//     }
+//   gettimeofday(&reply, NULL);
+
+//   long int sec = (reply.tv_sec - request.tv_sec) * 1000000;
+//   long int usec = reply.tv_usec - request.tv_usec;
+
+//   params.time = ((float)sec + (float)usec) / 1000;
+//   return (1);
+// }
